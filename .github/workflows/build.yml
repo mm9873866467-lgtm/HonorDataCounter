@@ -1,3 +1,4 @@
+
 name: Build Android APK
 
 on:
@@ -15,23 +16,31 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: 'platforms;android-34 build-tools;34.0.0'
 
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
 
       - name: Extract project
         run: |
           unzip HonorDataCounter_Source.zip -d project
-          cd project
-          chmod +x gradlew
-          ./gradlew assembleDebug 
-          
+          cd project/HonorDataCounter
+          gradle --no-daemon :app:assembleDebug
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-                 path: project/HonorDataCounter/app/build/outputs/apk/debug/app-debug.apk   
+          name: HonorDataCounter-APK
+          path: project/HonorDataCounter/app/build/outputs/apk/debug/app-debug.apk
