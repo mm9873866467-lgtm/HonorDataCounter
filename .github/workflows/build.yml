@@ -26,7 +26,7 @@ jobs:
       - name: Extract project
         run: |
           unzip HonorDataCounter_Source.zip -d project
-          cd project/HonorDataCounter
+          cd project
           chmod +x gradlew
           ./gradlew assembleDebug
 
@@ -34,4 +34,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HonorDataCounter-APK
-          path: project/HonorDataCounter/app/build/outputs/apk/debug/app-debug.apk
+          path: project/app/build/outputs/apk/debug/app-debug.apk
